@@ -1,0 +1,24 @@
+[
+	{
+		"_class": "com.sogeti.digital.sale.service.model.Products",
+		"productId": "1",
+		"productType": "Radio",
+		"productDescription": "AM FM Radio",
+		"productSpecs": "Digital AM FM Radio",
+		"quantity":3,
+		"productSize": 5.00,
+		"productCategory":"FM",
+		"provider":"Sony"
+	},
+	{
+		"_class": "com.sogeti.digital.sale.service.model.Products",
+		"productId": "1",
+		"productType": "Radio",
+		"productDescription": "AM FM Radio",
+		"productSpecs": "Analog AM FM Radio",
+		"quantity":2,
+		"productSize": 5.20,
+		"productCategory":"FM",
+		"provider":"Philips"
+	}
+]

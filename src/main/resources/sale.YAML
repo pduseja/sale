@@ -1,0 +1,248 @@
+swagger: '2.0'
+info:
+  title: Sale API
+  description: >-
+    This API will interact with Stock API / Service to check the stocks of items and then place an order to JMS for purchase of Items.
+  version: 0.0.1
+host: sogeti.digital.sale
+schemes:
+  - https
+basePath: /digital/sale
+securityDefinitions:
+  basicAuth:
+    type: basic
+    description: HTTP Basic Authentication.
+paths:
+  /order:
+    post:
+      summary: Request Purchase of Product
+      description: "" 
+      operationId: createOrder
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: Orders
+          description: Orders of Items
+          required: true
+          schema:
+            $ref: '#/definitions/Orders'
+      responses:
+        '200':
+          description: The Order was successfully placed for requested items.
+          schema:
+            $ref: '#/definitions/Orders'
+        '400':
+          description: BAD REQUEST The request was invalid or cannot be served
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: There is no resource behind the URI
+        '500':
+          description: Internal Server Error
+  /order:
+    put:
+      summary: Update Orders
+      description: "" 
+      operationId: updateOrder
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: Orders
+          description: Order of Items
+          required: true
+          schema:
+            $ref: '#/definitions/Orders'
+      responses:
+        '200':
+          description: The Order was successfully updated for requested items.
+          schema:
+            $ref: '#/definitions/Orders'
+        '400':
+          description: BAD REQUEST The request was invalid or cannot be served
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: There is no resource behind the URI
+        '500':
+          description: Internal Server Error          
+  /product/{productType}:
+    get:
+      summary: Get the Product details
+      description: To get product details for a given productType
+      operationId: getProductList
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - $ref: '#/definitions/productType'        
+      responses:
+        '200':
+          description: The List of Products is returned as result of the Query.
+          schema:
+              $ref: '#/definitions/ListProducts'
+        '400':
+          description: BAD REQUEST The request was invalid or cannot be served
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: There is no resource behind the URI
+        '500':
+          description: Internal Server Error 
+  /product/{productType}/{productCategory}/{productSize}:
+    get:
+      summary: Get the Product details
+      description: To get product details for a given productType, productSize and productCategory        
+      operationId: getProductList
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - $ref: '#/definitions/productType'
+        - $ref: '#/definitions/productCategory'
+        - $ref: '#/definitions/productSize'
+      responses:
+        '200':
+          description: The Product queries is available in stocks.
+          schema:
+              $ref: '#/definitions/ListProducts'
+        '400':
+          description: BAD REQUEST The request was invalid or cannot be served
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: There is no resource behind the URI
+        '500':
+          description: Internal Server Error        
+definitions:
+  productCategory:
+    type: string
+    description: Catogory of the Product
+    in: path
+    required: true
+  productType:
+    type: string
+    description: Type of the Product
+    in: path
+    required: true
+  productSize:
+    type: string
+    description: Size of the Product
+    in: path
+    required: true
+  ListProducts:
+	type: array
+	items:
+	  - $ref: '#/definitions/Products'	
+  Orders:
+    type: object
+    properties:
+      orderid:
+        type: number
+        description: ID of the Order
+      userid:
+        type: string
+        description: User Id, which will give user details from User Service
+      total:
+        type: number
+        description: Total Price of Item before Tax
+      tax:
+        type: number
+        description: percentage of local taxes
+	  ListOrderItem:
+		type: array
+		items:
+		  - $ref: '#/definitions/OrderItem'	
+  OrderItem:
+    type: object
+    properties:
+      orderItemId:
+        type: number
+        description: ID of the OrderItem
+      productId:
+        type: number
+        description: Product Id, the user has to retrieve it from the Product / stock service, currently its part of Code, once the code is implemented, this OrderItem Object has to be modified
+      productquantity:
+        type: number
+        description: The Quantity of the product for the OrderItem
+      orderid:
+        type: number
+        description: Order relation to OrderItem		
+  Products:
+    type: object
+    properties:
+      productId:
+        type: nmuber
+        description: ID of the Product
+	  provider:
+		type: string
+		description: Manufacturer of the product
+      productType:
+        type: string
+        description: Type of the Product
+      productDescription:
+        type: string
+        description: Description of the Product
+      productSpecs:
+        type: string
+        description: Specifications of the Product
+      quantity:
+        type: number
+        description: Quantity of the Product
+      productsize:
+        type: number
+        description: Size of the Product
+      productCategory:
+        type: string
+        description: Category of the Product
+	  cost:
+		type: number
+		description: This is the cost per unit
+	  tax:
+		type: number
+		description: This is the local tax per unit	  
+  ErrorResponse:
+    type: object
+    properties:
+      developerMessage:
+        type: string
+        description: The developer message
+      errors:
+        type: array
+        description: The list of errors
+        items:
+          $ref: '#/definitions/error'
+      response:
+        type: object
+        description: The payload for the response
+        properties: {}
+      status:
+        type: string
+        description: The status
+        enum:
+          - VALIDATION
+          - OK
+          - ERROR
+    description: Validation errors
+  error:
+    type: object
+    properties:
+      errorCd:
+        type: string
+      errorDescription:
+        type: string

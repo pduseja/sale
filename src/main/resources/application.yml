@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: SaleApplication
+  jackson:
+    default-property-inclusion: non-empty
+    deserialization:
+      accept-empty-string-as-null-object: true
+      accept-empty-array-as-null-object: true
+      fail-on-null-for-primitives: true
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    
+  datasource:
+    username: root 
+    password: Sogeti@12
+    name: sogeti2
+    url: jdbc:mysql://localhost:3306/sogeti2?useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+        
+server:
+  port: 8090
+  
+management:
+  server:
+    servlet:
+      context-path: /actuator
+  info:
+    git:
+      mode: full
+    
+logging:
+  level:
+    root: warn
+    com.sogeti.digital.sale: debug
+    
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /api
